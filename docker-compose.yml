@@ -1,0 +1,62 @@
+version: '3'
+services:
+
+  database:
+    container_name: database
+    image: postgis/postgis:15-master
+    volumes:
+      - ./$DIRECTUS_DATA_FOLDER/database:/var/lib/postgresql/data
+    networks:
+      - directus
+    ports:
+      - 5432:5432
+    environment:
+      POSTGRES_DB: 'directus'
+      POSTGRES_USER: $DB_USER
+      POSTGRES_PASSWORD: $DB_PASSWORD
+
+  cache:
+    container_name: cache
+    image: redis:7
+    command: --port 6380
+    networks:
+      - directus
+
+  directus:
+    container_name: directus
+    build:
+      context: './'
+      dockerfile: Dockerfile
+    ports:
+      - 8055:8055
+    volumes:
+      - ./$DIRECTUS_DATA_FOLDER/uploads:/directus/uploads
+      - ./$DIRECTUS_DATA_FOLDER/extensions:/directus/extensions
+    networks:
+      - directus
+    depends_on:
+      - cache
+      - database
+    environment:
+      DB_CLIENT: 'pg'
+      DB_HOST: 'database'
+      DB_PORT: '5432'
+      DB_DATABASE: 'directus'
+      DB_USER: $DB_USER
+      DB_PASSWORD: $DB_PASSWORD
+
+      CACHE_ENABLED: 'true'
+      CACHE_STORE: 'redis'
+      REDIS: 'redis://cache:6380'
+
+      KEY: $DIRECTUS_KEY
+      SECRET: $DIRECTUS_SECRET
+      ADMIN_EMAIL: $DIRECTUS_EMAIL_ADMIN  
+      ADMIN_PASSWORD: $DIRECTUS_PASSWORD_ADMIN
+
+      PUBLIC_URL: $DIRECTUS_PUBLIC_URL
+      WEBSOCKETS_ENABLED: true
+      FLOWS_EXEC_ALLOWED_MODULES: directus-extension-editorjs
+
+networks:
+  directus:

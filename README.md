@@ -36,7 +36,8 @@ directusVPN is a VPN (Virtual Private Network) solution built with Directus and 
     ```
 
 ### Tips
-If you happen to change the `PREFIX` varianle in `.env`, make sure to exclude the appropriate folder in `.gitignore`.
+- If you happen to change the `PREFIX` varianle in `.env`, make sure to exclude the appropriate folder in `.gitignore`.
+- To load a specific version of Directus (currently 10.4.2), edit the `Dockerfile`.
 
 
 ### Troubleshoot

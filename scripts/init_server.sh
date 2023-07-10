@@ -17,8 +17,7 @@ while true; do
     echo "Options:"
     echo "0 - Initial update"
     echo "1 - Docker installation"
-    echo "2 - NVM install and conf"
-    echo "3 - Clone repo"
+    echo "2 - NVM install and configuration"
     echo "q - Quit"
     echo
 
@@ -65,14 +64,14 @@ while true; do
         2)
             # NVM install and conf
             # Add your NVM installation and configuration commands here
-            echo "NVM installation and configuration commands"
-            ;;
-        3)
-            # Clone repository
-            confirm "Clone the repository?"
+            confirm "Install NVM and latest Node version?"
             if [[ $? -eq 0 ]]; then
-                git clone https://github.com/AristideBH/directusVPN.git && cd directusVPN
+                sudo apt-get install curl gnupg2 -y
+                curl https://raw.githubusercontent.com/creationix/nvm/master/install.sh | bash
+                source ~/.bashrc
+                nvm install node
             fi
+            ;;
             ;;
         q)
             echo "Exiting..."

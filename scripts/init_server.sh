@@ -3,7 +3,7 @@
 # Function to display a message and wait for user confirmation
 function confirm {
     local response
-    read -p "$1 [Y/n]: " response
+    read -p "$(tput bold)$1 [Y/n]: $(tput sgr0)" response
     response=${response,,}  # Convert response to lowercase
     if [[ $response =~ ^(yes|y|)$ ]]; then
         return 0  # User confirmed (proceed)
@@ -12,35 +12,54 @@ function confirm {
     fi
 }
 
+# Function to display a banner
+function display_banner {
+    echo "$(tput setaf 5)"
+    
+    echo "██████╗ ██╗██████╗ ███████╗ ██████╗████████╗██╗   ██╗███████╗    ██╗   ██╗██████╗ ███╗   ██╗"
+    echo "██╔══██╗██║██╔══██╗██╔════╝██╔════╝╚══██╔══╝██║   ██║██╔════╝    ██║   ██║██╔══██╗████╗  ██║"
+    echo "██║  ██║██║██████╔╝█████╗  ██║        ██║   ██║   ██║███████╗    ██║   ██║██████╔╝██╔██╗ ██║"
+    echo "██║  ██║██║██╔══██╗██╔══╝  ██║        ██║   ██║   ██║╚════██║    ╚██╗ ██╔╝██╔═══╝ ██║╚██╗██║"
+    echo "██████╔╝██║██║  ██║███████╗╚██████╗   ██║   ╚██████╔╝███████║     ╚████╔╝ ██║     ██║ ╚████║"
+    echo "╚═════╝ ╚═╝╚═╝  ╚═╝╚══════╝ ╚═════╝   ╚═╝    ╚═════╝ ╚══════╝      ╚═══╝  ╚═╝     ╚═╝  ╚═══╝"
+    echo "$(tput sgr0)"
+    echo "Welcome to the Directus server config script!"
+    echo
+}
+
+# Display the banner
+display_banner
+
 # Options menu
 while true; do
-    echo "Options:"
-    echo "0 - Initial update"
-    echo "1 - Docker installation"
-    echo "2 - NVM install and configuration"
-    echo "q - Quit"
+    echo "$(tput bold)Options:"
+    echo "1. Initial server updates"
+    echo "2. Docker installation for Debian"
+    echo "3. NVM install and configuration"
+    echo "4. Clone repo"
+    echo "q. Quit"
     echo
 
-    read -p "Enter the option number to proceed (or 'q' to quit): " option
+    read -p "Please select an option (or 'q' to quit): " option
 
     case $option in
-        0)
+        1)
             # Initial update
-            confirm "Perform initial update?"
+            confirm "$(tput bold)Perform initial update?"
             if [[ $? -eq 0 ]]; then
                 sudo apt update && sudo apt upgrade
             fi
             ;;
-        1)
+        2)
             # Docker installation
-            confirm "Uninstall previous Docker versions?"
+            confirm "$(tput bold)Uninstall previous Docker versions?"
             if [[ $? -eq 0 ]]; then
                 for pkg in docker.io docker-doc docker-compose podman-docker containerd runc; do
                     sudo apt-get remove $pkg
                 done
             fi
 
-            confirm "Install dependencies and add Docker repository?"
+            confirm "$(tput bold)Install dependencies and add Docker repository?"
             if [[ $? -eq 0 ]]; then
                 sudo apt-get update
                 sudo apt-get install -y ca-certificates curl gnupg
@@ -54,17 +73,17 @@ while true; do
                     $(. /etc/os-release && echo \"$VERSION_CODENAME\") stable" | \
                     sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
 
-                confirm "Install Docker?"
+                confirm "$(tput bold)Install Docker?"
                 if [[ $? -eq 0 ]]; then
                     sudo apt-get update
                     sudo apt-get install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
                 fi
             fi
             ;;
-        2)
+        3)
             # NVM install and conf
             # Add your NVM installation and configuration commands here
-            confirm "Install NVM and latest Node version?"
+            confirm "$(tput bold)Install NVM and latest Node version?"
             if [[ $? -eq 0 ]]; then
                 sudo apt-get install curl gnupg2 -y
                 curl https://raw.githubusercontent.com/creationix/nvm/master/install.sh | bash
@@ -72,13 +91,20 @@ while true; do
                 nvm install node
             fi
             ;;
+        4)
+            # Clone repository
+            confirm "$(tput bold)Clone the repository?"
+            if [[ $? -eq 0 ]]; then
+                read -p "Enter the Git repository URL: " repo_url
+                git clone "$repo_url" && cd $(basename "$repo_url" .git)
+            fi
             ;;
         q)
             echo "Exiting..."
             exit 0
             ;;
         *)
-            echo "Invalid option"
+            echo "Invalid option. Please try again."
             ;;
     esac
 

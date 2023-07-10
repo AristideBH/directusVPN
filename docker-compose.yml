@@ -1,15 +1,12 @@
 version: '3'
 services:
-
   database:
     container_name: database
-    image: postgis/postgis:15-master
+    image: postgis/postgis:13-master
     volumes:
       - ./$DIRECTUS_DATA_FOLDER/database:/var/lib/postgresql/data
     networks:
       - directus
-    ports:
-      - 5432:5432
     environment:
       POSTGRES_DB: 'directus'
       POSTGRES_USER: $DB_USER

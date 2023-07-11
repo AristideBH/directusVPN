@@ -2,7 +2,7 @@ version: '3'
 services:
   database:
     container_name: ${PREFIX}-database
-    image: postgis/postgis:13-master
+    image: postgis/postgis:15-master
     volumes:
       - ./$DIRECTUS_DATA_FOLDER/database:/var/lib/postgresql/data
     networks:

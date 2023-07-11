@@ -51,11 +51,11 @@ services:
       ADMIN_PASSWORD: $DIRECTUS_PASSWORD_ADMIN
 
       PUBLIC_URL: $DIRECTUS_PUBLIC_URL
-      WEBSOCKETS_ENABLED: true
+      WEBSOCKETS_ENABLED: 'true'
       # FLOWS_EXEC_ALLOWED_MODULES: directus-extension-editorjs
 
-      CORS_ENABLED: true
-      CORS_ORIGIN: '*'
+      CORS_ENABLED: 'true'
+      CORS_ORIGIN: $CORS_ALLOWED_ORGINS
 
 networks:
   directus:

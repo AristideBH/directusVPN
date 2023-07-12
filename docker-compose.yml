@@ -2,7 +2,7 @@ version: '3'
 services:
   database:
     container_name: ${PREFIX}-database
-    image: postgis/postgis:15-master
+    image: postgis/postgis:13-master
     volumes:
       - ./$DIRECTUS_DATA_FOLDER/database:/var/lib/postgresql/data
     networks:
@@ -27,12 +27,12 @@ services:
       - 8055:8055
     volumes:
       - ./$DIRECTUS_DATA_FOLDER/uploads:/directus/uploads
-      # - ./$DIRECTUS_DATA_FOLDER/extensions:/directus/extensions
-    networks:
-      - directus
+      - ./$DIRECTUS_DATA_FOLDER/extensions:/directus/extensions
     depends_on:
       - cache
       - database
+    networks:
+      - directus
     environment:
       DB_CLIENT: 'pg'
       DB_HOST: 'database'

@@ -1,3 +1,3 @@
 .env
-/app_data/*
-/data/*
+/app_data/database
+/app_data/uploads

@@ -2,7 +2,7 @@ version: '3'
 services:
   database:
     container_name: ${PREFIX}-database
-    image: postgis/postgis:13-master
+    image: postgis/postgis:15-master
     volumes:
       - ./$DIRECTUS_DATA_FOLDER/database:/var/lib/postgresql/data
     networks:
@@ -42,6 +42,7 @@ services:
       DB_PASSWORD: $DB_PASSWORD
 
       CACHE_ENABLED: 'true'
+      CACHE_AUTO_PURGE: 'true'
       CACHE_STORE: 'redis'
       REDIS: 'redis://cache:6379'
 
@@ -52,7 +53,7 @@ services:
 
       PUBLIC_URL: $DIRECTUS_PUBLIC_URL
       WEBSOCKETS_ENABLED: 'true'
-      # FLOWS_EXEC_ALLOWED_MODULES: directus-extension-editorjs
+      FLOWS_EXEC_ALLOWED_MODULES: directus-extension-editorjs,directus-extension-wpslug-interface
 
       CORS_ENABLED: 'true'
       CORS_ORIGIN: $CORS_ALLOWED_ORIGINS
